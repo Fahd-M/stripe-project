@@ -1,19 +1,20 @@
 import React from 'react';
 import Head from 'next/head';
-import Navbar from './Navbar';
+
+import { Navbar } from './Navbar';
 import Footer from './Footer';
 
-export default function Layout(){
+export const Layout = ({ children }) => {
   return (
-    <div className='layout'>
+    <div className="layout">
       <Head>
-        <title> Fahd Store </title>
+        <title>Fahd First Store</title>
       </Head>
-      <header> 
+      <header>
         <Navbar />
       </header>
       <main className="main-container">
-        EMPTY
+        {children}
       </main>
       <footer>
         <Footer />
