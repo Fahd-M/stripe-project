@@ -12,9 +12,35 @@ import { useStateContext } from "../context/StateContext";
 
 import { urlFor } from "../lib/client";
 
+import getStripe from '../lib/getStripe';
+
 const Cart = () => {
   const cartRef = useRef();
   const { totalPrice, totalQuantities, cartItems, setShowCart, toggleCartItemQuantity, onRemove } = useStateContext();
+
+  const handleCheckout = async () => {
+    //first get an instance of the stripe promise 
+    const stripe = await getStripe();
+
+    //make api req to our own nextJS backend
+    const response = await fetch('/api/stripe', { 
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(cartItems), //pass in all our products which are contained inside cartItems
+    });
+
+    if(response.statusCode === 500) return; // exit function if server error
+
+    const data = await response.json(); //if no error then we set data 
+    
+    toast.loading('Redirecting...'); 
+
+    //call stripe instance
+    stripe.redirectToCheckout({ sessionId: data.id }); //created one instance of a checkout, 1 user for 1 instance, and data kept on backend even if page reloaded
+  }
+
 
   return (
     <div className="cart-wrapper" ref={cartRef}>
@@ -89,7 +115,7 @@ const Cart = () => {
 
             </div>
             <div className="btn-container">
-              <button type="button" className='btn' onClick="">
+              <button type="button" className='btn' onClick={handleCheckout}>
                 Pay with Stripe
               </button>
             </div>
