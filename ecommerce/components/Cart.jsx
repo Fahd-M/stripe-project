@@ -28,7 +28,7 @@ const Cart = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(cartItems), //pass in all our products which are contained inside cartItems
+      body: JSON.stringify(cartItems), //pass in all our products which are contained inside cartItems. this would be req.body, if you want req.body.cartItems then you must have { cartItems: JSON.stringify(cartItems)}
     });
 
     if(response.statusCode === 500) return; // exit function if server error
